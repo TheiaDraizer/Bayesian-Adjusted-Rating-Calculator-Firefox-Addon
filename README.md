@@ -11,6 +11,15 @@ A Firefox extension to calculate Bayesian Weighted Ratings for products.
 - **Clickable Links**: Navigate to product links directly.
 - **Best Row Highlighting**: Highlights the row with the highest rating.
 
+
+---
+
+## Install
+
+From addons.mozilla.org:
+>https://addons.mozilla.org/en-US/firefox/addon/adjusted-rating-calculator/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search
+
+
 ---
 
 ## Usage
