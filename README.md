@@ -24,8 +24,3 @@ A Firefox extension to calculate Bayesian Weighted Ratings for products.
 4. Use the "Go" button to open links.
 5. Rows are added automatically. Use the trash button to remove rows or "Clear All Rows" to reset.
 
----
-
-## Thanks
-
-Created by [TheiaDraizer](https://github.com/TheiaDraizer).
