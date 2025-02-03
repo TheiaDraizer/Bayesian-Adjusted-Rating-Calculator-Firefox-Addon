@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "Weighted Rating Calculator",
+  "version": "1.0",
+  "description": "This calculator computes the Bayesian Weighted Rating for products based on their average rating and number of ratings. It uses a Bayesian average to balance the product's score with a global average, ensuring fairer comparisons for items with fewer ratings.",
+  "icons": {
+    "48": "icons/rating-48.png"
+  },
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "sidebar_action": {
+    "default_icon": "icons/rating-48.png",
+    "default_title": "Weighted Rating Calculator",
+    "default_panel": "sidebar.html"
+  },
+  "browser_action": {
+    "default_icon": "icons/rating-48.png",
+    "default_title": "Open Weighted Rating Calculator"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  }
+}

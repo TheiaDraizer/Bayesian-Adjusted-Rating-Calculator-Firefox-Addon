@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weighted Rating Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            min-width: 300px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        button {
+            padding: 8px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .clear-row {
+            background-color: #ff4d4d;
+            margin-left: 5px;
+            padding: 5px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .clear-row:hover {
+            background-color: #cc0000;
+        }
+
+        .clear-all {
+            background-color: #ff4d4d;
+            margin-right: 5px;
+        }
+
+        .clear-all:hover {
+            background-color: #cc0000;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .fa-trash {
+            color: white;
+            font-size: 14px;
+        }
+
+        .go-button {
+            background-color: #28a745;
+            margin-left: 5px;
+            padding: 5px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .go-button:hover {
+            background-color: #218838;
+        }
+
+        .link-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .link-container input {
+            flex: 1;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Name/Link</th>
+                <th>Average Rating</th>
+                <th>No. of Ratings</th>
+                <th>Weighted Rating</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+    <div>
+        <button id="clearAllButton" class="clear-all">Clear All Rows</button>
+        <button id="addRowButton">Add Row</button>
+    </div>
+    <script src="sidebar.js"></script>
+</body>
+
+</html>
