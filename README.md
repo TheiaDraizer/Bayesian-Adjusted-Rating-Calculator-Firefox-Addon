@@ -2,6 +2,9 @@
 
 A Firefox extension to calculate Bayesian Weighted Ratings for products.
 
+<img src="https://github.com/user-attachments/assets/db86fd04-3a84-4304-9729-86a77232fc6d" width="400" />
+
+
 ---
 
 ## Features
