@@ -28,6 +28,7 @@ function calculateGlobalAverage() {
 
 function getAvgRatingFromRow(row) {
     const avgRatingInput = row.querySelector('input.avg-rating');
+    console.log(avgRatingInput + ' avg rating input');
     return validateAverageRating(avgRatingInput, minRating, maxRating);
 }
 
@@ -51,14 +52,7 @@ function validateNumberOfRatings(input) {
 
     // Remove all whitespace
     value = value.replace(/\s+/g, '');
-
-    // Handle comma as a visual separator (remove it entirely)
-    value = value.replace(/,/g, '');
-
-    // Remove any non-numeric or non-decimal characters
     value = value.replace(/[^0-9.]/g, '');
-
-    // Ensure only one decimal point is present
     value = value.replace(/(\..*)\./g, '$1'); // Remove extra decimal points
 
     console.log(value + ' after cleaning');
@@ -66,6 +60,8 @@ function validateNumberOfRatings(input) {
     const numericValue = parseFloat(value);
 
     console.log(numericValue + ' parsed average');
+
+
 
     // Validate the numeric value against the min and max range
     if (isNaN(numericValue) || numericValue < min || numericValue > max) {
@@ -150,18 +146,18 @@ function addRow(link = '', avgRating = '', numRatings = '', weightedRating = '-'
 
     const avgRatingCell = document.createElement('td');
     const avgRatingInput = document.createElement('input');
-    avgRatingInput.type = 'number';
-    avgRatingInput.step = '0.01';
+    avgRatingInput.type = 'text';
+    // avgRatingInput.step = '0.01';
     avgRatingInput.className = 'avg-rating';
-    avgRatingInput.min = minRating;
-    avgRatingInput.max = maxRating;
+    // avgRatingInput.min = minRating;
+    // avgRatingInput.max = maxRating;
     avgRatingInput.value = avgRating;
     avgRatingCell.appendChild(avgRatingInput);
     row.appendChild(avgRatingCell);
 
     const numRatingsCell = document.createElement('td');
     const numRatingsInput = document.createElement('input');
-    numRatingsInput.type = 'number';
+    numRatingsInput.type = 'text';
     numRatingsInput.className = 'num-ratings';
     numRatingsInput.value = numRatings;
     numRatingsCell.appendChild(numRatingsInput);
@@ -190,27 +186,32 @@ function addRow(link = '', avgRating = '', numRatings = '', weightedRating = '-'
         input.addEventListener('input', () => {
             calculateRatings();
             highlightBestRow();
-
-            const lastRow = tbody.lastElementChild;
-            const lastRowInputs = lastRow.querySelectorAll('input');
-            if (Array.from(lastRowInputs).every(input => input.value.trim() !== '')) {
-                addRow();
-            }
+            // const lastRow = tbody.lastElementChild;
+            // const lastRowInputs = lastRow.querySelectorAll('input');
+            // if (Array.from(lastRowInputs).every(input => input.value.trim() !== '')) {
+            //     addRow();
+            // }
         });
     });
 
     highlightBestRow();
 }
-
 function calculateRatings() {
     const globalAvg = calculateGlobalAverage();
     const rows = document.querySelectorAll('#tableBody tr');
+
     rows.forEach(row => {
         const avgRatingInput = row.querySelector('input.avg-rating');
         const numRatingsInput = row.querySelector('input.num-ratings');
 
+        console.log('Avg Rating Input:', avgRatingInput.value); // Debug: Log avg rating input
+        console.log('Num Ratings Input:', numRatingsInput.value); // Debug: Log num ratings input
+
         const avgRating = parseFloat(validateAverageRating(avgRatingInput, minRating, maxRating));
         const numRatings = parseInt(validateNumberOfRatings(numRatingsInput), 10);
+
+        console.log('Validated Avg Rating:', avgRating); // Debug: Log validated avg rating
+        console.log('Validated Num Ratings:', numRatings); // Debug: Log validated num ratings
 
         if (!isNaN(avgRating) && !isNaN(numRatings) && numRatings > 0) {
             const weightedRating = calculateBayesianLowerBound(avgRating, numRatings, globalAvg);
