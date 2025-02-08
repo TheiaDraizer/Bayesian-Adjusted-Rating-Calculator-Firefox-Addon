@@ -1,7 +1,8 @@
 let minRating = 0;
 let maxRating = 10;
 
-function calculateBayesianLowerBound(avgRating, numRatings, globalAvg, confidence = 0.95) {
+
+function calculateBayesianLowerBound(avgRating, numRatings, globalAvg) {
     const m = 10;
     const Z = 1.96;
     const alpha = avgRating * numRatings + globalAvg * m;
@@ -91,7 +92,6 @@ function updateRatingsRange() {
     const tbody = document.getElementById('tableBody');
     const row = document.createElement('tr');
 
-    // Link/Name Cell
     const linkCell = document.createElement('td');
     const linkContainer = document.createElement('div');
     linkContainer.className = 'link-container';
@@ -103,7 +103,6 @@ function updateRatingsRange() {
     linkInput.value = link;
     linkContainer.appendChild(linkInput);
 
-    // Go Button
     const goButton = document.createElement('button');
     goButton.className = 'go-button';
     goButton.innerHTML = '<i class="fas fa-external-link-alt"></i>';
@@ -111,7 +110,7 @@ function updateRatingsRange() {
         const url = linkInput.value.trim();
         if (url) {
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                window.open(`https://${url}`, '_blank'); // Add https:// if missing
+                window.open(`https://${url}`, '_blank');
             } else {
                 window.open(url, '_blank');
             }
@@ -124,7 +123,6 @@ function updateRatingsRange() {
     linkCell.appendChild(linkContainer);
     row.appendChild(linkCell);
 
-    // Average Rating Cell
     const avgRatingCell = document.createElement('td');
     const avgRatingInput = document.createElement('input');
     avgRatingInput.type = 'text';
@@ -133,7 +131,6 @@ function updateRatingsRange() {
     avgRatingCell.appendChild(avgRatingInput);
     row.appendChild(avgRatingCell);
 
-    // Number of Ratings Cell
     const numRatingsCell = document.createElement('td');
     const numRatingsInput = document.createElement('input');
     numRatingsInput.type = 'text';
@@ -142,12 +139,10 @@ function updateRatingsRange() {
     numRatingsCell.appendChild(numRatingsInput);
     row.appendChild(numRatingsCell);
 
-    // Weighted Rating Cell
     const weightedRatingCell = document.createElement('td');
     weightedRatingCell.textContent = weightedRating;
     row.appendChild(weightedRatingCell);
 
-    // Action Cell (Clear Row Button)
     const actionCell = document.createElement('td');
     const containerForClearRowButton = document.createElement('div');
     containerForClearRowButton.className = 'container-for-clear-row-button';
@@ -166,10 +161,8 @@ function updateRatingsRange() {
 
     row.appendChild(actionCell);
 
-    // Append Row to Table Body
     tbody.appendChild(row);
 
-    // Add Event Listeners for Automatic Updates
     const inputs = row.querySelectorAll('input');
     inputs.forEach(input => {
         input.addEventListener('input', () => {
@@ -179,7 +172,6 @@ function updateRatingsRange() {
         });
     });
 
-    // Add a New Row When the Last Row is Interacted With
     if (row === tbody.lastElementChild) {
         inputs.forEach(input => {
             input.addEventListener('focus', () => {
@@ -216,7 +208,6 @@ function highlightBestRow() {
     let bestRow = null;
     let highestRating = -Infinity;
 
-    // Find the row with the highest weighted rating
     rows.forEach(row => {
         const weightedRatingCell = row.querySelector('td:nth-child(4)');
         const weightedRating = parseFloat(weightedRatingCell.textContent);
@@ -227,18 +218,16 @@ function highlightBestRow() {
         }
     });
 
-    // Reset styles for all rows
     rows.forEach(row => {
-        row.style.backgroundColor = ''; // Reset background color
+        row.style.backgroundColor = '';
         const weightedRatingCell = row.querySelector('td:nth-child(4)');
         if (weightedRatingCell) {
-            weightedRatingCell.style.color = ''; // Reset text color
+            weightedRatingCell.style.color = '';
         }
     });
 
-    // Highlight the best row
     if (bestRow) {
-        bestRow.style.backgroundColor = '#B1BCC4FF'; // Highlight background
+        bestRow.style.backgroundColor = '#B1BCC4FF';
 
         const weightedRatingCell = bestRow.querySelector('td:nth-child(4)');
         if (weightedRatingCell) {
