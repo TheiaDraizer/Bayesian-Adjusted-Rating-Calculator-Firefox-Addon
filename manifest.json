@@ -8,7 +8,8 @@
   },
   "permissions": [
     "storage",
-    "tabs"
+    "tabs",
+    "clipboardWrite"
   ],
   "sidebar_action": {
     "default_icon": "icons/rating-48.png",

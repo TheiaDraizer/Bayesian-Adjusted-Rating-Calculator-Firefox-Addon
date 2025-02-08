@@ -28,7 +28,6 @@ function calculateGlobalAverage() {
 
 function getAvgRatingFromRow(row) {
     const avgRatingInput = row.querySelector('input.avg-rating');
-    console.log(avgRatingInput + ' avg rating input');
     return validateAverageRating(avgRatingInput, minRating, maxRating);
 }
 
@@ -47,32 +46,20 @@ function validateNumberOfRatings(input) {
         input.value = value;
     }
     return numericValue;
-} function validateAverageRating(input, min = minRating, max = maxRating) {
-    let value = input.value.trim();
+}
 
-    // Remove all whitespace
+function validateAverageRating(input, min = minRating, max = maxRating) {
+    let value = input.value.trim();
     value = value.replace(/\s+/g, '');
     value = value.replace(/[^0-9.]/g, '');
-    value = value.replace(/(\..*)\./g, '$1'); // Remove extra decimal points
-
-    console.log(value + ' after cleaning');
-
+    value = value.replace(/(\..*)\./g, '$1');
     const numericValue = parseFloat(value);
-
-    console.log(numericValue + ' parsed average');
-
-
-
-    // Validate the numeric value against the min and max range
     if (isNaN(numericValue) || numericValue < min || numericValue > max) {
         value = '';
     }
-
-    // Update the input value if it was modified
     if (input.value !== value) {
         input.value = value;
     }
-
     return numericValue;
 }
 
@@ -100,61 +87,53 @@ function updateRatingsRange() {
 
     calculateRatings();
     highlightBestRow();
-}
-function addRow(link = '', avgRating = '', numRatings = '', weightedRating = '-') {
+} function addRow(link = '', avgRating = '', numRatings = '', weightedRating = '-') {
     const tbody = document.getElementById('tableBody');
     const row = document.createElement('tr');
 
+    // Link/Name Cell
     const linkCell = document.createElement('td');
     const linkContainer = document.createElement('div');
     linkContainer.className = 'link-container';
+
     const linkInput = document.createElement('input');
     linkInput.type = 'text';
     linkInput.placeholder = 'Enter URL';
     linkInput.className = 'link-input';
-    row.appendChild(linkInput);
+    linkInput.value = link;
     linkContainer.appendChild(linkInput);
 
+    // Go Button
     const goButton = document.createElement('button');
     goButton.className = 'go-button';
-    goButton.textContent = 'Go';
-
-
-    goButton.addEventListener('click', (event) => {
-        event.preventDefault();
-
-        if (!linkInput) {
-            console.error('linkInput is not defined or null.');
-            return;
-        }
-
+    goButton.innerHTML = '<i class="fas fa-external-link-alt"></i>';
+    goButton.addEventListener('click', () => {
         const url = linkInput.value.trim();
-
-        console.log('URL:', url);
-
         if (url) {
-            window.open(url, '_blank');
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                window.open(`https://${url}`, '_blank'); // Add https:// if missing
+            } else {
+                window.open(url, '_blank');
+            }
         } else {
-            console.warn('No URL provided.');
+            alert('Please enter a valid URL.');
         }
     });
-
-
     linkContainer.appendChild(goButton);
+
     linkCell.appendChild(linkContainer);
     row.appendChild(linkCell);
 
+    // Average Rating Cell
     const avgRatingCell = document.createElement('td');
     const avgRatingInput = document.createElement('input');
     avgRatingInput.type = 'text';
-    // avgRatingInput.step = '0.01';
     avgRatingInput.className = 'avg-rating';
-    // avgRatingInput.min = minRating;
-    // avgRatingInput.max = maxRating;
     avgRatingInput.value = avgRating;
     avgRatingCell.appendChild(avgRatingInput);
     row.appendChild(avgRatingCell);
 
+    // Number of Ratings Cell
     const numRatingsCell = document.createElement('td');
     const numRatingsInput = document.createElement('input');
     numRatingsInput.type = 'text';
@@ -163,11 +142,17 @@ function addRow(link = '', avgRating = '', numRatings = '', weightedRating = '-'
     numRatingsCell.appendChild(numRatingsInput);
     row.appendChild(numRatingsCell);
 
+    // Weighted Rating Cell
     const weightedRatingCell = document.createElement('td');
     weightedRatingCell.textContent = weightedRating;
     row.appendChild(weightedRatingCell);
 
+    // Action Cell (Clear Row Button)
     const actionCell = document.createElement('td');
+    const containerForClearRowButton = document.createElement('div');
+    containerForClearRowButton.className = 'container-for-clear-row-button';
+    actionCell.appendChild(containerForClearRowButton);
+
     const clearRowButton = document.createElement('button');
     clearRowButton.className = 'clear-row';
     clearRowButton.textContent = 'X';
@@ -176,26 +161,38 @@ function addRow(link = '', avgRating = '', numRatings = '', weightedRating = '-'
         calculateRatings();
         highlightBestRow();
     });
-    actionCell.appendChild(clearRowButton);
+    containerForClearRowButton.appendChild(clearRowButton);
+    actionCell.appendChild(containerForClearRowButton);
+
     row.appendChild(actionCell);
 
+    // Append Row to Table Body
     tbody.appendChild(row);
 
+    // Add Event Listeners for Automatic Updates
     const inputs = row.querySelectorAll('input');
     inputs.forEach(input => {
         input.addEventListener('input', () => {
+
             calculateRatings();
             highlightBestRow();
-            // const lastRow = tbody.lastElementChild;
-            // const lastRowInputs = lastRow.querySelectorAll('input');
-            // if (Array.from(lastRowInputs).every(input => input.value.trim() !== '')) {
-            //     addRow();
-            // }
         });
     });
 
+    // Add a New Row When the Last Row is Interacted With
+    if (row === tbody.lastElementChild) {
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                if (row === tbody.lastElementChild) {
+                    addRow();
+                }
+            });
+        });
+    }
+
     highlightBestRow();
 }
+
 function calculateRatings() {
     const globalAvg = calculateGlobalAverage();
     const rows = document.querySelectorAll('#tableBody tr');
@@ -203,15 +200,8 @@ function calculateRatings() {
     rows.forEach(row => {
         const avgRatingInput = row.querySelector('input.avg-rating');
         const numRatingsInput = row.querySelector('input.num-ratings');
-
-        console.log('Avg Rating Input:', avgRatingInput.value); // Debug: Log avg rating input
-        console.log('Num Ratings Input:', numRatingsInput.value); // Debug: Log num ratings input
-
         const avgRating = parseFloat(validateAverageRating(avgRatingInput, minRating, maxRating));
         const numRatings = parseInt(validateNumberOfRatings(numRatingsInput), 10);
-
-        console.log('Validated Avg Rating:', avgRating); // Debug: Log validated avg rating
-        console.log('Validated Num Ratings:', numRatings); // Debug: Log validated num ratings
 
         if (!isNaN(avgRating) && !isNaN(numRatings) && numRatings > 0) {
             const weightedRating = calculateBayesianLowerBound(avgRating, numRatings, globalAvg);
@@ -221,77 +211,162 @@ function calculateRatings() {
         }
     });
 }
-
 function highlightBestRow() {
     const rows = document.querySelectorAll('#tableBody tr');
     let bestRow = null;
-    let bestRating = -Infinity;
+    let highestRating = -Infinity;
 
+    // Find the row with the highest weighted rating
     rows.forEach(row => {
         const weightedRatingCell = row.querySelector('td:nth-child(4)');
         const weightedRating = parseFloat(weightedRatingCell.textContent);
-        if (!isNaN(weightedRating) && weightedRating > bestRating) {
-            bestRating = weightedRating;
+
+        if (!isNaN(weightedRating) && weightedRating > highestRating) {
+            highestRating = weightedRating;
             bestRow = row;
         }
     });
 
+    // Reset styles for all rows
     rows.forEach(row => {
-        row.style.backgroundColor = '';
+        row.style.backgroundColor = ''; // Reset background color
+        const weightedRatingCell = row.querySelector('td:nth-child(4)');
+        if (weightedRatingCell) {
+            weightedRatingCell.style.color = ''; // Reset text color
+        }
     });
 
+    // Highlight the best row
     if (bestRow) {
-        bestRow.style.backgroundColor = '#e6ffe6';
+        bestRow.style.backgroundColor = '#B1BCC4FF'; // Highlight background
+
+        const weightedRatingCell = bestRow.querySelector('td:nth-child(4)');
+        if (weightedRatingCell) {
+            weightedRatingCell.style.color = '#000000';
+            weightedRatingCell.style.fontWeight = 'bold';
+        }
     }
 }
 
+
 function clearAllRows() {
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '';
-    addRow();
+    const confirmDelete = confirm('Are you sure you want to delete all ratings?');
+    if (confirmDelete) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        addRow();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     loadTableData();
 
-    document.getElementById('addRowButton').addEventListener('click', addRow);
     document.getElementById('clearAllButton').addEventListener('click', clearAllRows);
-    document.getElementById('updateRatingsButton').addEventListener('click', updateRatingsRange);
-
     document.getElementById('minRatingInput').value = minRating;
     document.getElementById('maxRatingInput').value = maxRating;
-
     const tbody = document.getElementById('tableBody');
+    tbody.addEventListener('input', () => {
+        saveTableData();
+    });
+    document.getElementById('addRowButton').addEventListener('click', () => {
+        addRow();
+        saveTableData();
+    });
+    const copyAllButton = document.getElementById('copyAllButton');
+    if (copyAllButton) {
+        copyAllButton.addEventListener('click', copyAllInfo);
+    }
+    document.getElementById('update-possible-ratings').addEventListener('click', updateRatingsRange);
+
+});
+
+
+function copyAllInfo() {
+    const tableData = [];
+    const rows = document.querySelectorAll('#tableBody tr');
+
+    rows.forEach(row => {
+        const linkInput = row.querySelector('input.link-input');
+        const avgRatingInput = row.querySelector('input.avg-rating');
+        const numRatingsInput = row.querySelector('input.num-ratings');
+        const weightedRatingCell = row.querySelector('td:nth-child(4)');
+
+        if (linkInput && avgRatingInput && numRatingsInput && weightedRatingCell) {
+            tableData.push({
+                link: linkInput.value.trim(),
+                avgRating: avgRatingInput.value.trim(),
+                numRatings: numRatingsInput.value.trim(),
+                weightedRating: weightedRatingCell.textContent.trim(),
+            });
+        }
+    });
+
+    const textToCopy = tableData
+        .map(item => `${item.link},${item.avgRating},${item.numRatings},${item.weightedRating}`)
+        .join('\n');
+
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                console.log('Copied all info to clipboard');
+                alert('All info copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy all info:', err);
+                alert('Failed to copy info to clipboard.');
+            });
+    } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                console.log('Copied all info to clipboard');
+                alert('All info copied to clipboard!');
+            } else {
+                throw new Error('Failed to copy text.');
+            }
+        } catch (err) {
+            console.error('Failed to copy all info:', err);
+            alert('Failed to copy info to clipboard.');
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+}
+function loadTableData() {
+    const data = JSON.parse(localStorage.getItem('tableData')) || [];
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+
+    data.forEach(item => {
+        addRow(item.link, item.avgRating, item.numRatings, item.weightedRating);
+    });
+
     if (tbody.childElementCount === 0) {
         addRow();
     }
-});
-
-function loadTableData() {
-    browser.storage.local.get('tableData').then(result => {
-        const data = result.tableData || [];
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = '';
-        data.forEach(item => {
-            addRow(item.link, item.avgRating, item.numRatings, item.weightedRating);
-        });
-    });
 }
 
 function saveTableData() {
     const rows = document.querySelectorAll('#tableBody tr');
     const data = [];
     rows.forEach(row => {
-        const linkInput = row.querySelector('input.link');
+        const linkInput = row.querySelector('input.link-input');
         const avgRatingInput = row.querySelector('input.avg-rating');
         const numRatingsInput = row.querySelector('input.num-ratings');
         const weightedRatingCell = row.querySelector('td:nth-child(4)');
-        data.push({
-            link: linkInput.value,
-            avgRating: avgRatingInput.value,
-            numRatings: numRatingsInput.value,
-            weightedRating: weightedRatingCell.textContent,
-        });
+
+        if (linkInput && avgRatingInput && numRatingsInput && weightedRatingCell) {
+            data.push({
+                link: linkInput.value,
+                avgRating: avgRatingInput.value,
+                numRatings: numRatingsInput.value,
+                weightedRating: weightedRatingCell.textContent,
+            });
+        }
     });
-    browser.storage.local.set({ tableData: data });
+    localStorage.setItem('tableData', JSON.stringify(data));
 }

@@ -7,129 +7,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weighted Rating Calculator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
             margin: 0;
-            padding: 10px;
-            min-width: 300px;
+            padding: 20px;
         }
 
-        table {
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .controls div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .link-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="number"],
+        input[type="text"] {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 10px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ccc;
+            min-width: 20px;
             padding: 8px;
-            text-align: left;
-        }
-
-        input {
-            width: 100%;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #2d2d2d;
+            color: #ffffff;
+            outline: none;
+            -moz-appearance: textfield;
+            appearance: textfield;
+            height: 36px;
             box-sizing: border-box;
         }
 
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
 
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        button {
-            padding: 8px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .clear-row {
-            background-color: #ff4d4d;
-            margin-left: 5px;
-            padding: 5px 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .clear-row:hover {
-            background-color: #cc0000;
-        }
-
-        .clear-all {
-            background-color: #ff4d4d;
-            margin-right: 5px;
-        }
-
-        .clear-all:hover {
-            background-color: #cc0000;
-        }
-
-        a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .fa-trash {
-            color: white;
-            font-size: 14px;
-        }
 
         .go-button {
-            background-color: #28a745;
-            margin-left: 5px;
-            padding: 5px 8px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            height: 36px;
+            box-sizing: border-box;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .go-button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
         }
 
-        .link-container {
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #clearAllButton {
+            background-color: #aa2a2a;
+        }
+
+        #clearAllButton:hover {
+            background-color: #ff4d4d;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        th {
+            background-color: #333;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #2d2d2d;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #262626;
+        }
+
+        tbody tr:hover {
+            background-color: #3d3d3d;
+        }
+
+        .container-for-clear-row-button {
             display: flex;
+            justify-content: right;
             align-items: center;
         }
 
-        .link-container input {
-            flex: 1;
-            margin-right: 5px;
-        }
-
-        .controls {
+        .clear-row {
+            box-sizing: border-box;
+            aspect-ratio: 1/1;
+            width: 15px;
+            background-color: #aa2a2a;
+            border: none;
+            color: white;
+            cursor: pointer;
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
+            justify-content: center;
             align-items: center;
+            font-size: px;
         }
 
-        .controls label {
-            margin-right: 5px;
-        }
-
-        .controls input[type="number"] {
-            width: 80px;
-            /* Adjust width for better alignment */
+        .clear-row:hover {
+            background-color: #ff4d4d;
         }
     </style>
 </head>
@@ -138,25 +157,25 @@
     <div class="controls">
         <div>
             <label for="minRatingInput">Min Possible Rating:</label>
-            <input type="number" id="minRatingInput" value="0" min="0" step="0.01">
+            <input type="number" id="minRatingInput" value="0" min="0" step="1" style="width: 70px;">
         </div>
         <div>
             <label for="maxRatingInput">Max Possible Rating:</label>
-            <input type="number" id="maxRatingInput" value="10" min="0" step="0.01">
+            <input type="number" id="maxRatingInput" value="10" min="0" step="1" style="width: 70px;">
         </div>
         <div>
-            <button id="updateRatingsButton">Update Ratings</button>
+            <button id="update-possible-ratings">Update Possible Ratings</button>
         </div>
     </div>
 
     <table id="ratingTable">
         <thead>
             <tr>
-                <th>Link</th>
+                <th>Link/name</th>
                 <th>Average Rating</th>
                 <th>Number of Ratings</th>
-                <th>Weighted Rating</th>
-                <th>Action</th>
+                <th>Score</th>
+                <th></th>
             </tr>
         </thead>
         <tbody id="tableBody">
@@ -164,12 +183,14 @@
         </tbody>
     </table>
 
-    <div class="controls">
-        <button id="addRowButton">Add Row</button>
+    <div class="controls" style=" margin-top: 20px; ">
         <button id="clearAllButton">Clear All</button>
+        <button id="addRowButton">Add Row</button>
+        <span style="float:right;">
+            <button id="copyAllButton">Copy All Info</button>
+        </span>
     </div>
 
 </body>
-
 
 </html>
