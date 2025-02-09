@@ -1,14 +1,19 @@
 let minRating = 0;
 let maxRating = 10;
 
-
 function calculateBayesianLowerBound(avgRating, numRatings, globalAvg) {
-    const m = 10;
+    const C = 100;
+    const m = C / Math.sqrt(numRatings);
     const Z = 1.96;
+    const maxRating = 10;
+
     const alpha = avgRating * numRatings + globalAvg * m;
     const beta = (maxRating - avgRating) * numRatings + (maxRating - globalAvg) * m;
+
     const stdDev = Math.sqrt((alpha * beta) / ((alpha + beta) ** 2 * (alpha + beta + 1)));
+
     const lowerBound = (alpha / (alpha + beta)) - (Z * stdDev);
+
     return lowerBound.toFixed(2);
 }
 
