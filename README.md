@@ -1,8 +1,8 @@
-# Weighted Rating Calculator
+# Bayesian Weighted Rating Calculator
 
 A Firefox extension to calculate Bayesian Weighted Ratings for products.
 
-<img src="https://github.com/user-attachments/assets/db86fd04-3a84-4304-9729-86a77232fc6d" width="400" />
+<img width="485" alt="Screenshot 2025-02-08 at 20 49 24" src="https://github.com/user-attachments/assets/4b27d04e-bb25-439c-9850-3ef3458956ef" width="400" />
 
 
 ---
