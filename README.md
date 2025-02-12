@@ -20,8 +20,7 @@ A Firefox extension to calculate Bayesian Weighted Ratings for products.
 ## Install
 
 From addons.mozilla.org:
->https://addons.mozilla.org/en-US/firefox/addon/adjusted-rating-calculator/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search
-
+https://addons.mozilla.org/en-US/firefox/addon/bayesian-weighted-rating/
 
 ---
 
